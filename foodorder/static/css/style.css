@@ -1,0 +1,114 @@
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Navbar Styling */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Card Styling */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-placeholder {
+    overflow: hidden;
+}
+
+/* Form Styling */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Feature Icons */
+.feature-icon, .step-icon {
+    display: inline-block;
+    padding: 20px;
+    border-radius: 50%;
+    background-color: rgba(13, 110, 253, 0.1);
+    margin-bottom: 15px;
+}
+
+/* Footer Styling */
+footer {
+    padding-top: 40px;
+    padding-bottom: 20px;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Cart Item */
+.cart-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+/* Quantity Input Styling */
+.update-quantity-form .input-group {
+    display: inline-flex;
+    width: auto;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Prevent image overflow */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Button Hover Effects */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Alert Styling */
+.alert {
+    border-radius: 0.3rem;
+}
+
+/* Category Navigation */
+.nav-pills .nav-link {
+    margin-right: 5px;
+    border-radius: 20px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Our Menu</h1>
+    
+    <!-- Categories Tabs -->
+    <div class="mb-4">
+        <div class="nav nav-pills flex-nowrap overflow-auto">
+            <a href="{% url 'menu' %}" class="nav-link {% if active_category is None %}active{% endif %}">
+                All Items
+            </a>
+            {% for category in categories %}
+            <a href="{% url 'menu' %}?category={{ category.id }}" 
+               class="nav-link {% if active_category == category.id %}active{% endif %}">
+                {{ category.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Food Items -->
+    <div class="row">
+        {% if food_items %}
+            {% for item in food_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-img-placeholder bg-light text-center p-4">
+                        {% if item.image_url %}
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="img-fluid" style="height: 200px; width: auto;">
+                        {% else %}
+                        <svg width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#f8f9fa" />
+                            <text x="50%" y="50%" font-family="Arial" font-size="16" text-anchor="middle" fill="#6c757d">
+                                {{ item.name }}
+                            </text>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <span class="badge bg-primary rounded-pill">${{ item.price }}</span>
+                        </div>
+                        <p class="card-text text-muted small">{{ item.description|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" 
+                                        data-bs-toggle="modal" data-bs-target="#itemModal{{ item.id }}">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                            </div>
+                            <form action="{% url 'cart_add' item.id %}" method="post" class="d-flex align-items-center add-to-cart-form">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm me-2" style="width: 100px;">
+                                    <button type="button" class="btn btn-outline-secondary quantity-decrease">-</button>
+                                    <input type="number" name="quantity" value="1" min="1" max="10" class="form-control text-center">
+                                    <button type="button" class="btn btn-outline-secondary quantity-increase">+</button>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="itemModal{{ item.id }}" tabindex="-1" aria-labelledby="itemModalLabel{{ item.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="itemModalLabel{{ item.id }}">{{ item.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center mb-3">
+                                {% if item.image_url %}
+                                <img src="{{ item.image_url }}" alt="{{ item.name }}" class="img-fluid" style="max-height: 200px;">
+                                {% else %}
+                                <svg width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100%" height="100%" fill="#f8f9fa" />
+                                    <text x="50%" y="50%" font-family="Arial" font-size="16" text-anchor="middle" fill="#6c757d">
+                                        {{ item.name }}
+                                    </text>
+                                </svg>
+                                {% endif %}
+                            </div>
+                            <p>{{ item.description }}</p>
+                            <div class="d-flex justify-content-between">
+                                <span>Category: {{ item.category.name }}</span>
+                                <span class="fw-bold">${{ item.price }}</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <form action="{% url 'cart_add' item.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No food items available in this category. Please check back later.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity buttons functionality
+        const decreaseButtons = document.querySelectorAll('.quantity-decrease');
+        const increaseButtons = document.querySelectorAll('.quantity-increase');
+        
+        decreaseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('input');
+                const value = parseInt(input.value);
+                if (value > 1) {
+                    input.value = value - 1;
+                }
+            });
+        });
+        
+        increaseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('input');
+                const value = parseInt(input.value);
+                if (value < 10) {
+                    input.value = value + 1;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
